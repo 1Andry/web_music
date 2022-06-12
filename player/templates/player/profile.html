@@ -1,0 +1,21 @@
+{% extends 'player/base.html' %}
+{% block content %}
+
+<div class="wrap-upload">
+    <form action="" class="upload" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ load_song.as_p }}
+        <div class="form-error">{{ form.non_field_error }}</div>
+        <button class="upload-btn" name="upload" type="submit">upload</button>
+    </form>
+</div>
+<div class="wrap-upload">
+     <form action="" class="upload" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>{{play_list.as_p}}</p>
+        <div class="form-error">{{ form.non_field_error }}</div>
+        <button class="upload-btn" name="add" type="submit">add</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'player/base.html' %}
+{% block content %}
+
+<h2>{{error}}</h2>
+<div class="register">
+    <h1>Войти:</h1>
+   <div>
+       <form action="" method="post">
+           {% csrf_token %}
+           {{form}}
+        <button type="submit" class="btn">Войти</button>
+       </form>
+
+    </div>
+
+</div>
+{% endblock %}
