@@ -44,7 +44,6 @@ def create_song(request, album_id):
     album = get_object_or_404(Album, pk=album_id)
     if form.is_valid():
         albums_songs = album.song_set.all()
-        # print(albums_songs)
         for s in albums_songs:
             if s.audio_file == form.cleaned_data.get("audio_file"):
                 print(s.audio_file)
