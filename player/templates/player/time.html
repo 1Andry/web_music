@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% load static %}
+{% load blog_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="header">
+    <div class="wrapper">
+        <ul class="mainmenu">
+            <li><a href="#">logo</a>
+            {% if user.is_authenticated %}
+            <li><a href="#">{{user.username}}</a>|<a href="#">Выйти</a></li>
+            {% else %}
+            <li><a href="#">Реристрация</a>|<a href="#">Войти</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+<div class="body">
+    <div class="body-wrapper">
+
+        {% block content %}
+        {% endblock %}
+        {% if user.is_authenticated %}
+        {% for i in p_lists%}
+        <div class="sound-wrapper">
+            <div><p class="sound">{{i.file}}</p></div>
+            <div class="option">
+                <input class="checkbox" type="checkbox">
+                <a href="#" download=""><img src="#" alt=""></a>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <audio class="audio" controls  src=""></audio>
+    </div>
+</div>
+<div class="footer">
+    <div class="footer-wrapper">
+        <div class="player-container">
+            <div class="name-song">nan</div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <div class="buttons">
+                <div class="prev"><img src="{% static 'prev.png' %}" alt=""></div>
+                <div class="play"><img src="{% static 'play.png' %}" alt=""></div>
+                <div class="pause"><img src="{% static 'pause.png' %}" alt=""></div>
+                <div class="next"><img src="{% static 'next.png' %}" alt=""></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'script.js' %}"></script>
+</body>
+</html>

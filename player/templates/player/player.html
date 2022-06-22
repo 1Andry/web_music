@@ -1,0 +1,21 @@
+{% load static %}
+<audio class="audio" controls hidden src="http://127.0.0.1:8000/4/media/Imagine_Dragons_-_Natural_57429538_RO8h7PM.mp3"></audio>
+
+<div class="footer">
+    <div class="footer-wrapper">
+        <div class="player-container">
+            <div class="name-song">nan</div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <div class="buttons">
+                <div class="prev"><img src="{% static 'prev.png' %}" alt=""></div>
+                <div class="play"><img src="{% static 'play.png' %}" alt=""></div>
+                <div class="pause"><img src="{% static 'pause.png' %}" alt=""></div>
+                <div class="next"><img src="{% static 'next.png' %}" alt=""></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'script.js' %}"></script>
+

@@ -2,18 +2,11 @@ from django.contrib import admin
 from .models import *
 
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'id')
-
-
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('user', 'song', 'id')
+    list_display = ('id', 'album', 'audio_file', 'is_favorite')
+    list_display_links = ('id', 'audio_file',)
+    search_fields = ('audio_file',)
 
 
-class PlayListAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'play_list')
-
-
-admin.site.register(Songs, SongAdmin)
-admin.site.register(Profile, UserAdmin)
-admin.site.register(UserList, PlayListAdmin)
+admin.site.register(Album)
+admin.site.register(Song, SongAdmin)

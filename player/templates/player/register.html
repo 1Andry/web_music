@@ -1,13 +1,29 @@
-{% extends 'player/base.html' %}
-{% block content %}
-<div class="register">
-    <h1>Регистрация:</h1>
-   <div>
-       <form method="post">
-            {% csrf_token %}
-            {{form}}
-        <button class="btn">Регистрация</button>
-        </form>
+{% extends 'player/base_visitor.html' %}
+{% block title %}Register{% endblock %}
+{% block register_active %}active{% endblock %}
+
+{% block body %}
+<div class="body">
+    <div class="body-wrap">
+        <div class="album-wrap">
+            <div class="album">
+                <h3>Регистрация </h3>
+                {% if error_message %}
+                <p><strong>{{ error_message }}</strong></p>
+                {% endif %}
+                <form class="" role="form" action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form}}
+                    <div class="">
+                        <button type="submit" class="btn-visitor">Зарегистрироваться</button>
+                    </div>
+                </form>
+                <div class="">
+                    Уже зарегистрированы? <a href="{% url 'player:login_user' %}">Войти</a>.
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,59 +1,50 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-<div class="header">
-    <h1>1111</h1>
-    <div class="wrapper">
-        <ul class="mainmenu">
-            <li><a href="{% url 'base' %}">logo</a>
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'profile' %}">{{user.username}}</a>|<a href="{% url 'logout' %}">Выйти</a></li>
-            {% else %}
-            <li><a href="{% url 'register' %}">Реристрация</a>|<a href="{% url 'login' %}">Войти</a></li>
-            {% endif %}
-        </ul>
-    </div>
-</div>
+{% extends 'player/base.html' %}
+{% block body %}
 <div class="body">
-    <div class="body-wrapper">
-        {% block content %}
-        {% endblock %}
-        {% for s in songs %}
-        <div class="sound-wrapper">
-            <div><p class="sound">{{s}}</p></div>
-            <div class="option">
-                <input class="checkbox" type="checkbox">
-                <a href="media/{{s}}" download="">
-                <img src="static/download-2.svg" alt=""></a>
+    <div class="user-tit">
+        <h3>{{ user.username }} Альбомы</h3>
+    </div>
+    <div class="body-wrap">
+        {% if albums %}
+        {% for album in albums %}
+        <div class="album-wrap">
+            <div class="album">
+                <a href="{% url 'player:detail' album.id %}">
+                    {% if album.album_logo %}
+                    <img src="{{ album.album_logo.url }}" class="album-img">
+                    {% else %}
+                    <img src="{{ 'static/nones.png' }}" class="album-img">
+                    {% endif %}
+                </a>
+                <div class="text">
+                    <h2>{{ album.album_title }}</h2>
+
+                    <button type="button"><a href="{% url 'player:detail' album.id %}" class="" role="button">
+                        <span style="color: #0ced41;">&#x25BA;</span> Play</a></button>
+                    <form action="{% url 'player:delete_album' album.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="album_id" value="{{ album.id }}"/>
+                        <button type="submit" class=""><span class="">&#x2716;</span> Удалить
+                        </button>
+                    </form>
+                    <!-- Favorite Album -->
+                    <a href="{% url 'player:favorite_album' album.id %}" class="btn btn-default btn-sm btn-favorite"
+                       role="button">
+                        <span class="glyphicon glyphicon-star {% if album.is_favorite %}active{% endif %}"></span>
+                    </a>
+                </div>
             </div>
         </div>
         {% endfor %}
-        <audio class="audio" controls hidden src=""></audio>
-    </div>
-</div>
-<div class="footer">
-    <div class="footer-wrapper">
-        <div class="player-container">
-            <div class="name-song">nan</div>
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
-            <div class="buttons">
-                <div class="prev"><img src="static/prev.png" alt=""></div>
-                <div class="play"><img src="static/play.png" alt=""></div>
-                <div class="pause"><img src="static/pause.png" alt=""></div>
-                <div class="next"><img src="static/next.png" alt=""></div>
-            </div>
+        {% else %}
+        <div class="album">
+            <br>
+            <a href="{% url 'player:create_album' %}">
+                <button type="button" class="btn-visitor">+ Создать альбом</button>
+            </a>
         </div>
+        {% endif %}
     </div>
 </div>
-<script src="static/script.js"></script>
-</body>
 
-</html>
+{% endblock %}

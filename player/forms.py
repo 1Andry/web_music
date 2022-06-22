@@ -1,34 +1,31 @@
 from django import forms
-from django.forms import ModelForm
-
-from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Songs, UserList
+
+from .models import Album, Song
 
 
-class RegisterUserForm(UserCreationForm):
+class AlbumForm(forms.ModelForm):
+    # album_title = forms.CharField(label='Название', max_length=500)
+    # album_logo = forms.ImageField(label='Логотип',)
+
+    class Meta:
+        model = Album
+        fields = ['album_title', 'album_logo']
+
+
+class SongForm(forms.ModelForm):
+    audio_file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
+    class Meta:
+        model = Song
+        fields = ['audio_file']
+
+
+class UserForm(forms.ModelForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-
-
-class UploadFileForm(forms.ModelForm):
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput)
 
     class Meta:
-        model = Songs
-
-        fields = ('song', 'user')
-
-
-class PlayListForm(forms.ModelForm):
-
-    class Meta:
-        model = UserList
-        fields = ('user', 'play_list', 'songs_link')
-
-#
-#
-# class LoginUserForm(forms.Form):
-#     email = forms.EmailField(label='email', widget=forms.TextInput(attrs={'class': 'form-input'}))
-#     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+        model = User
+        fields = ['username', 'password1', 'password2']

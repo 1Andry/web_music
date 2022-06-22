@@ -1,93 +1,215 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate
-from django.views.generic import DetailView, CreateView, FormView, ListView, TemplateView
-from django.urls import reverse_lazy
-from .models import Profile, Songs, UserList
-from .forms import UploadFileForm, RegisterUserForm, PlayListForm
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-import os.path
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
+from django.contrib.auth.forms import AuthenticationForm
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from .forms import AlbumForm, SongForm, UserForm
+from .models import Album, Song
+
+AUDIO_FILE_TYPES = ['wav', 'mp3']
+IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
 
 
-def base(request):
-    try:
-        play_list = UserList.objects.filter(user=request.user)
-        songs = Songs.objects.filter(user=request.user)
-        return render(request, 'player/base.html', {'songs': songs, 'play_list': play_list})
-    except:
-        return render(request, 'player/base.html')
-
-def test(request):
-    p = UserList.objects.filter(user=request.user)
-    # l = UserList.user.all()
-    return render(request, 'player/test.html',{'p': p,  })
-
-
-
-class RegisterUser(CreateView):
-    form_class = RegisterUserForm
-    template_name = 'player/register.html'
-    success_url = reverse_lazy('base')
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return dict(list(context.items()))
-
-    # def form_valid(self, form):
-    #     user = form.save
-    #     login(self.request, user)
-    #     return redirect('base')
-
-
-class LoginUser(LoginView):
-    form_class = AuthenticationForm
-    template_name = 'player/login.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return dict(list(context.items()))
-
-
-def add_song(request):
-    if request.method == 'POST':
-        song = UploadFileForm(request.POST, request.FILES)
-        if song.is_valid():
-            song.save()
-            return redirect('base')
+def create_album(request):
+    if not request.user.is_authenticated:
+        return render(request, 'player/login.html')
     else:
-        song = UploadFileForm()
-    return render(request, 'player/upload.html', {'song': song})
+        form = AlbumForm(request.POST or None, request.FILES or None)
+        if form.is_valid():
+            album = form.save(commit=False)
+            album.user = request.user
+            if not album.album_logo:
+                album.album_logo = 'static/nones.png'
+                album.album_logo = request.FILES['album_logo']
+                file_type = album.album_logo.url.split('.')[-1]
+                file_type = file_type.lower()
+                if file_type not in IMAGE_FILE_TYPES:
+                    context = {
+                        'album': album,
+                        'form': form,
+                        'error_message': 'Image file must be PNG, JPG, or JPEG',
+                    }
+                    return render(request, 'player/create_album.html', context)
+            album.save()
+            return render(request, 'player/detail.html', {'album': album})
+        context = {
+            "form": form,
+        }
+        return render(request, 'player/create_album.html', context)
 
 
-def user_p(request):
-    songs = Songs.objects.filter(user=request.user)
-    load_song = UploadFileForm()
-    play_list = PlayListForm
-    # print(Songs.song)
-    dict_obj = {
-        'play_list': play_list,
-        'songs': songs,
-        'load_song': load_song,
+def create_song(request, album_id):
+    form = SongForm(request.POST or None, request.FILES or None)
+    album = get_object_or_404(Album, pk=album_id)
+    if form.is_valid():
+        albums_songs = album.song_set.all()
+        # print(albums_songs)
+        for s in albums_songs:
+            if s.audio_file == form.cleaned_data.get("audio_file"):
+                print(s.audio_file)
+                context = {
+                    'album': album,
+                    'form': form,
+                    'error_message': 'Уже есть такой файл',
+                }
+                return render(request, 'player/create_song.html', context)
+        song = form.save(commit=False)
+        song.album = album
+        song.audio_file = request.FILES['audio_file']
+        file_type = song.audio_file.url.split('.')[-1]
+        file_type = file_type.lower()
+        if file_type not in AUDIO_FILE_TYPES:
+            context = {
+                'album': album,
+                'form': form,
+                'error_message': 'Аудио файл должен быть WAV, MP3',
+            }
+            return render(request, 'player/create_song.html', context)
+        song.save()
+        return render(request, 'player/detail.html', {'album': album})
+    context = {
+        'album': album,
+        'form': form,
     }
-    if request.method == 'POST' and 'upload' in request.POST:
-        load_song = UploadFileForm(request.POST, request.FILES)
-        if load_song.is_valid():
-            load_song.user = request.user
-            load_song.save()
-            return redirect('profile')
-        else:
-            print('NO')
-            return render(request, 'player/profile.html', dict_obj)
+    return render(request, 'player/create_song.html', context)
 
-    if request.method == 'POST' and 'add' in request.POST:
-        play_list = PlayListForm(request.POST)
-        if play_list.is_valid():
-            play_list.save()
-            print('YES')
-            return redirect('base')
+
+def delete_album(request, album_id):
+    album = Album.objects.get(pk=album_id)
+    album.delete()
+    albums = Album.objects.filter(user=request.user)
+    return render(request, 'player/index.html', {'albums': albums})
+
+
+def delete_song(request, album_id, song_id):
+    album = get_object_or_404(Album, pk=album_id)
+    song = Song.objects.get(pk=song_id)
+    song.delete()
+    return render(request, 'player/detail.html', {'album': album})
+
+
+def detail(request, album_id):
+    if not request.user.is_authenticated:
+        return render(request, 'player/login.html')
+    else:
+        user = request.user
+        album = get_object_or_404(Album, pk=album_id)
+        return render(request, 'player/detail.html', {'album': album, 'user': user})
+
+
+def favorite(request, song_id):
+    song = get_object_or_404(Song, pk=song_id)
+    try:
+        if song.is_favorite:
+            song.is_favorite = False
         else:
-            print('NO')
-            return render(request, 'player/profile.html', dict_obj)
-    return render(request, 'player/profile.html', dict_obj)
+            song.is_favorite = True
+        song.save()
+    except (KeyError, Song.DoesNotExist):
+        return JsonResponse({'success': False})
+    else:
+        return JsonResponse({'success': True})
+
+
+def favorite_album(request, album_id):
+    album = get_object_or_404(Album, pk=album_id)
+    try:
+        if album.is_favorite:
+            album.is_favorite = False
+        else:
+            album.is_favorite = True
+        album.save()
+    except (KeyError, Album.DoesNotExist):
+        return JsonResponse({'success': False})
+    else:
+        return JsonResponse({'success': True})
+
+
+def index(request):
+    if not request.user.is_authenticated:
+        return render(request, 'player/login.html')
+    else:
+        albums = Album.objects.filter(user=request.user)
+        song_results = Song.objects.all()
+        query = request.GET.get("q")
+        if query:
+            albums = albums.filter(
+                Q(album_title__icontains=query) |
+                Q(artist__icontains=query)
+            ).distinct()
+            song_results = song_results.filter(
+                Q(song_title__icontains=query)
+            ).distinct()
+            return render(request, 'player/index.html', {
+                'albums': albums,
+                'songs': song_results,
+            })
+        else:
+            return render(request, 'player/index.html', {'albums': albums})
+
+
+def logout_user(request):
+    logout(request)
+    return render(request, 'player/logout_user.html')
+
+
+def login_user(request):
+    if request.method == "GET":
+        return render(request, 'player/login.html', {'form': AuthenticationForm()})
+    else:
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                albums = Album.objects.filter(user=request.user)
+                return render(request, 'player/index.html', {'albums': albums})
+            else:
+                return render(request, 'player/login.html',
+                              {'error': 'Неверные данные для входа  ', 'form': AuthenticationForm()})
+        else:
+            return render(request, 'player/login.html', {'error': 'Неверные данные для входа '})
+
+
+def register(request):
+    form = UserForm(request.POST or None)
+    if form.is_valid():
+        user = form.save(commit=False)
+        username = form.cleaned_data['username']
+        password1 = form.cleaned_data['password1']
+        password2 = form.cleaned_data['password2']
+        if password1 == password2:
+            user.set_password(password1)
+            user.save()
+            user = authenticate(username=username, password=password1)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                albums = Album.objects.filter(user=request.user)
+                return render(request, 'player/index.html', {'albums': albums})
+    context = {
+        "form": form,
+    }
+    return render(request, 'player/register.html', context)
+
+
+def songs(request, filter_by):
+    if not request.user.is_authenticated:
+        return render(request, 'player/login.html')
+    else:
+        try:
+            song_ids = []
+            for album in Album.objects.filter(user=request.user):
+                for song in album.song_set.all():
+                    song_ids.append(song.pk)
+            users_songs = Song.objects.filter(pk__in=song_ids)
+            if filter_by == 'favorites':
+                users_songs = users_songs.filter(is_favorite=True)
+        except Album.DoesNotExist:
+            users_songs = []
+        return render(request, 'player/songs.html', {
+            'song_list': users_songs,
+            'filter_by': filter_by,
+        })

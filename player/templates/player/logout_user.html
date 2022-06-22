@@ -1,0 +1,13 @@
+{% extends 'player/base.html' %}
+{% block body %}
+<div class="body">
+    <div class="body-wrap">
+        <div class="album-wrap">
+            <div class="album">
+                <h2>Вы вышли из системы</h2>
+                <a href="{% url 'player:login_user' %}" class="btn-visitor">Войти снова</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

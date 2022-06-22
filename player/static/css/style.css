@@ -1,14 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 body{
     padding: 0;
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #989b9e;
-    
+    box-sizing: border-box;
 }
-.wrapper{
-    max-width: 1300px;
-    margin: 0 auto;
-    /* box-sizing: border-box; */
+.btn-visitor{
+    color: #ffffff;
+    background-color: green;
+    font-size: 20px;
+    padding: 5px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+.reg-wrap{
+    background-color: #010101;
 
 }
 .footer{
@@ -19,39 +28,141 @@ body{
     bottom: 0;
 }
 .header{
-    background-color: rgb(255, 255, 255);
-    border-bottom: solid #003366;
+    background-color: #ffffff;
+    border-radius: 4px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.wrap-header{
+    margin: 0 auto;
+    background-color: #010101;
+    justify-content: space-between;
+    max-width: 1300px;
+    border-radius: 6px;
+}
+.nav{
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; 
+}
+.nav a{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    padding: 8px;
+}
+.nav-container-left{
+    display: flex;
+    justify-content: space-between;
+}
+.nav-container-right{
+    display: flex;
+    justify-content: space-between;
 
+}
+.navbar-3{
+    align-items: center;
+    display: flex;
+}
+.navbar-3 a{
+
+}
+.navbar-2{
+    align-items: center;
+    display: flex;
+}
+.navbar-1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-1 a{
+    margin-right: 15px;
+}
+.search-form{
+    display: flex;
+
+    align-items: center;
+}
+.form-control{
+    align-items: center;
 
 }
 .body{
-     margin: 0 auto; 
-    max-width: 700px; 
-    background-color: #ffffff; 
-      
-}
-.body-wrapper{ 
     margin: 0 auto;
 
-    min-height: 80vh;
-    padding: 40px;
-    box-sizing: border-box; 
+    width: 1300px;
+    box-sizing: border-box;
+    width: 100%;
 }
-.sound-wrapper{
-    align-items: center;
+.body-wrap{
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    width: 1200px;
+    max-width: 100%;
 
+}
+.user-tit{
+    margin: 0 auto;
+    padding-left: 30px;
+    width: 1200px;
+}
+.album-wrap{
+    display: flex;
+    margin: 10px;
+    border: 2px solid rgb(17, 12, 12);
+    border-radius: 4px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+.album{
+    max-width: 360px;
+    box-sizing: border-box;
+
+}
+.album img{
+    max-width: 250px;
+    max-height: 300px;
+}
+.add-song{
+    max-width: 800px;
+}
+.text{
     display: flex;
     justify-content: space-between;
-    background-color: #989b9e;
-
+    align-items: center;
+    flex-wrap: wrap
 }
-.option{
-    justify-content: space-between;
+.songs-info{
+    max-width: 800px;
+    flex: 1;
+}
+.songs{
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 10px 8px 8px 0px ;
+}
+.songs button{
+    padding: 8px;
+    box-sizing: border-box;
+    background-color: #337ab7;
+    border-radius: 4px;
+    border: none;
+    font-size: large;
+    color: #ffffff;
+}
+.info{
+    margin: 0 auto;
     display: flex;
     box-sizing: border-box;
-    width: 200px;
-    align-items: center;
-
+    padding: 10px;
+    border-radius: 4px;
+    border: solid 2px;
+}
+.songs a{
+    padding: 10px;
+    color: #ffffff;
 }
 .checkbox{
     width: 20px;
@@ -63,21 +174,7 @@ body{
     justify-content: space-between;
 
 }
-/* .out{
-    background-color: transparent;
-    color: #000;
-    border: none;
-    font-size: medium;
-} */
-/* .footer{
-    margin: 0 auto;
-    max-width: 700px;
 
-    background:#ffffff;
-    border: solid 3px #2B3C5B;
-    border-radius: 30px;
-
-} */
 .mainmenu{
     margin: 0 auto;
     max-width: 700px;
@@ -89,13 +186,13 @@ body{
 .mainmenu a{
     color: #000;
 }
-.upload{
-    /* background-color: aqua; */
+.play-list{
     display: flex;
-    justify-content: space-between;
+}
+.upload{
+    display: flex;
     align-items: center;
 }
-
 ul{
     list-style: none;
     padding: 0;
@@ -126,6 +223,9 @@ a{
     justify-content: center;
     background-color: #ffffff;
 
+}
+.simvol{
+    height: 10px;
 }
 .btn{
     width: 100%;
@@ -174,6 +274,25 @@ a{
     text-align: center;
     box-shadow: 0 2px 12px 2px #003366;
 }
+input[name="q"]{
+   all:initial;
+   background-color: #ffffff;
+   border-radius: 4px;
+   padding: 5px;
+}
+.btn-s{
+    background-color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    margin-left: -28px;
+}
+input[type="file"]{
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    color: transparent;
+}
 input{
     width: 100%;
     padding: 6px 10px;
@@ -186,5 +305,5 @@ input{
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-}
-
+} 
+/* _____________________________________ */

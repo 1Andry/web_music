@@ -1,0 +1,44 @@
+{% extends 'player/base.html' %}
+{% block title %}Add a New Song{% endblock %}
+{% block albums_active %}active{% endblock %}
+
+{% block body %}
+<div class="body">
+    <div class="body-wrap">
+        <!-- Left Album Info -->
+        <div class="">
+            <div class="">
+                <a href="{% url 'player:detail' album.id %}">
+                    {% if album.album_logo %}
+                    <img src="{{ album.album_logo.url }}" class="add-song">
+                    {% else %}
+                    <h3>No image to display</h3>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+        <!-- Right Song Info -->
+        <div class="">
+            <div class="">
+                <div class="">
+                    <h3>Добавить музыку в {{ album.album_title }}</h3>
+                    {% if error_message %}
+                    <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="album" value="{{ album }}">
+                        {% include 'player/form_template.html' %}
+                        <div class="">
+                            <div class="">
+                                <button type="submit" class="btn-visitor">Добавить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

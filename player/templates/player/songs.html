@@ -1,0 +1,43 @@
+{% extends 'player/base.html' %}
+{% block body %}
+<div class="body">
+    <div class="body-wrap">
+        <table class="">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th></th>
+                <th>Альбом</th>
+                <th>Favorite</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for song in song_list %}
+            <tr>
+                <td>{{ song.audio_file }}</td>
+                <td>
+                    <div class="sound">
+                        <a href="{{ song.audio_file.url }}">
+                            <button type="button"><span style="color: #0ced41;">&#x25BA;</span> Play</button>
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <a href="{% url 'player:detail' song.album.id %}">
+                        <img src="{{ song.album.album_logo.url }}" class="img-responsive"
+                             style="width: 20px; float: left; margin-right: 10px;"/>
+                    </a>
+                    <a href="{% url 'player:detail' song.album.id %}">{{ song.album.album_title }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'player:favorite' song.id %}" class="btn-favorite"><span
+                            class="glyphicon glyphicon-star {% if song.is_favorite %}active{% endif %}"></span></a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--{% include 'player/player.html'%}-->
+{% endblock %}

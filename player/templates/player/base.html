@@ -3,58 +3,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>My music</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-<div class="header">
-    <div class="wrapper">
-        <ul class="mainmenu">
-            <li><a href="{% url 'base' %}">logo</a>
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'profile' %}">{{user.username}}</a>|<a href="{% url 'logout' %}">Выйти</a></li>
-            {% else %}
-            <li><a href="{% url 'register' %}">Реристрация</a>|<a href="{% url 'login' %}">Войти</a></li>
-            {% endif %}
-        </ul>
-    </div>
-</div>
-<div class="body">
-    <div class="body-wrapper">
-
-
-        {% block content %}
-        {% endblock %}
-        {% for s in songs %}
-        <div class="sound-wrapper">
-            <div><p class="sound">{{s}}</p></div>
-            <div class="option">
-                <input class="checkbox" type="checkbox">
-                <a href="media/{{s}}" download="">
-                <img src="static/download-2.svg" alt=""></a>
+<nav class="header">
+    <div class="wrap-header">
+        <div class="nav">
+            <div class="nav-container-left">
+                <div class="navbar-1">
+                    <div><a class="navbar-brand" href="{% url 'player:index' %}">My music</a></div>
+                    <div class="{% block albums_active %}{% endblock %}"><a href="{% url 'player:index' %}">Альбомы</a>
+                    </div>
+                    <div class="{% block songs_active %}{% endblock %}"><a
+                            href="{% url 'player:songs' 'all' %}"><span class="simvol">🎷</span>Музыка</a>
+                    </div>
+                    <div class="navbar-2">
+                        <form class="search-form" role="search" method="get" action="{% url 'player:index' %}">
+                            <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+                            <button type="submit" class="btn-s">🔍</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
-        {% endfor %}
-        <audio class="audio" controls hidden src=""></audio>
-    </div>
-</div>
-<div class="footer">
-    <div class="footer-wrapper">
-        <div class="player-container">
-            <div class="name-song">nan</div>
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
-            <div class="buttons">
-                <div class="prev"><img src="static/prev.png" alt=""></div>
-                <div class="play"><img src="static/play.png" alt=""></div>
-                <div class="pause"><img src="static/pause.png" alt=""></div>
-                <div class="next"><img src="static/next.png" alt=""></div>
+            <div class="nav-container-right">
+                <div class="navbar-3">
+                    <a href="{% url 'player:create_album' %}">Добавить альбом</a>
+                    <a href="{% url 'player:logout_user' %}"> Выйти</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script src="static/script.js"></script>
+</nav>
+{% block body %}
+{% endblock %}
 </body>
-
 </html>

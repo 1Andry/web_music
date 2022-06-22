@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My music{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="wrap-header">
+    <div class="nav">
+        <div class="nav-container-left">
+            <a class="" href="{% url 'player:login_user'%}">My music</a>
+            <a href="{% url 'player:register' %}">Регистрация</a>
+            <a href="{% url 'player:login_user' %}">Войти</a>
+        </div>
+    </div>
+</div>
+
+{% block body %}
+{% endblock %}
+</body>
+</html>
