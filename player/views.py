@@ -42,31 +42,44 @@ def create_album(request):
 def create_song(request, album_id):
     form = SongForm(request.POST or None, request.FILES or None)
     album = get_object_or_404(Album, pk=album_id)
+    albums_songs = album.song_set.all()  # берем текущий альбом
+    # files = request.FILES.getlist('audio_file')
     if form.is_valid():
-        albums_songs = album.song_set.all()
-        for s in albums_songs:
-            if s.audio_file == form.cleaned_data.get("audio_file"):
-                print(s.audio_file)
-                context = {
-                    'album': album,
-                    'form': form,
-                    'error_message': 'Уже есть такой файл',
-                }
-                return render(request, 'player/create_song.html', context)
-        song = form.save(commit=False)
-        song.album = album
-        song.audio_file = request.FILES['audio_file']
-        file_type = song.audio_file.url.split('.')[-1]
-        file_type = file_type.lower()
-        if file_type not in AUDIO_FILE_TYPES:
-            context = {
-                'album': album,
-                'form': form,
-                'error_message': 'Аудио файл должен быть WAV, MP3',
-            }
-            return render(request, 'player/create_song.html', context)
-        song.save()
+        files = request.FILES.getlist('audio_file')
+        print(files)
+        # album = form.cleaned_data('album')
+        for f in files:
+            # form.objects.create(album=album, file=f)
+            print('=>', f)
+            song = form.save(commit=False)
+            song.album = album
+            song.audio_file = f
+            song.save()
         return render(request, 'player/detail.html', {'album': album})
+        # albums_songs = album.song_set.all() #берем текущий альбом
+        # for s in albums_songs:
+        #     if s.audio_file == form.cleaned_data.get("audio_file"):
+        #         print(s.audio_file)
+        #         context = {
+        #             'album': album,
+        #             'form': form,
+        #             'error_message': 'Уже есть такой файл',
+        #         }
+        #         return render(request, 'player/create_song.html', context)
+        # song = form.save(commit=False)
+        # song.album = album
+        # song.audio_file = request.FILES['audio_file']
+        # file_type = song.audio_file.url.split('.')[-1]
+        # file_type = file_type.lower()
+        # if file_type not in AUDIO_FILE_TYPES:
+        #     context = {
+        #         'album': album,
+        #         'form': form,
+        #         'error_message': 'Аудио файл должен быть WAV, MP3',
+        #     }
+    #         return render(request, 'player/create_song.html', context)
+    #     # song.save()
+    #     return render(request, 'player/detail.html', {'album': album})
     context = {
         'album': album,
         'form': form,
