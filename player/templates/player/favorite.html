@@ -6,7 +6,7 @@
             <button><a href="{% url 'player:songs' 'all' %}">Вся музыка</a></button>
             <button><a href="{% url 'player:favorite'  %}">Избранное</a></button>
         </div>
-
+        {% if favorite_songs %}
         <table class="">
             <thead>
             <tr>
@@ -14,11 +14,10 @@
                 <th></th>
                 <th>Альбом</th>
                 <th>Favorite</th>
-                <th>Скачать</th>
             </tr>
             </thead>
             <tbody>
-            {% for song in song_list %}
+            {% for song in favorite_songs %}
             <tr>
                 <td>{{ song.audio_file }}</td>
                 <td>
@@ -37,20 +36,14 @@
                     <a href="{% url 'player:detail' song.album.id %}">{{ song.album.album_title }}</a>
                 </td>
                 <td>
-
-                </td>
-                <td>
-                    <div class="">
-                        <a download="" href="{{ song.audio_file.url }}">
-                            <button type="button" class="download"><span>&#8676;</span></button>
-                        </a>
-                    </div>
                 </td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <h3>Нет избранного</h3>
+        {% endif %}
     </div>
 </div>
-<!--{% include 'player/player.html'%}-->
 {% endblock %}

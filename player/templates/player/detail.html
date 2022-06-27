@@ -34,8 +34,8 @@
                         <tr>
                             <th>Название</th>
                             <th></th>
-                            <th>Избранное</th>
                             <th></th>
+                            <th>Избранное</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -44,7 +44,7 @@
                             <td>{{ song.audio_file }}</td>
                             <td>
                                 <a class="sound" href="{{ song.audio_file.url }}">
-                                    <button type="button" class="">
+                                    <button type="button" class="btn-sound">
                                         <span style="color: #0ced41;">&#x25BA;</span>&nbsp; Play
                                     </button>
                                 </a>
@@ -53,14 +53,12 @@
                                 <form action="{% url 'player:delete_song' album.id song.id %}" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" name="song_id" value="{{ song.id }}"/>
-                                    <button type="submit" class="">
+                                    <button type="submit" class="btn-sound">
                                         <span class="">&#x2716;</span> Удалить
                                     </button>
                                 </form>
                             </td>
                             <td>
-
-                                <input type="checkbox"><a href="{% url 'player:favorite' song.id %}"></a>
                             </td>
                         </tr>
                         {% endfor %}

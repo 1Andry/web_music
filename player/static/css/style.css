@@ -101,7 +101,14 @@ body{
     box-sizing: border-box;
     width: 1200px;
     max-width: 100%;
+}
+.body-wrapper{
+    margin: 0 auto;
 
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    width: 1200px;
+    max-width: 100%;
 }
 .user-tit{
     margin: 0 auto;
@@ -142,6 +149,10 @@ body{
     margin: 0 auto;
     box-sizing: border-box;
     padding: 10px 8px 8px 0px ;
+}
+.favorite{
+    display: flex;
+    align-items: center;
 }
 .songs button{
     padding: 8px;
@@ -305,5 +316,24 @@ input{
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-} 
+}
+
+.btn-sound {
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: #337ab7;
+    cursor: pointer;
+}
+.btn-sound a{
+    color: #ffffff;
+}
+.download{
+    color: #337ab7;
+    transform: rotate(-90deg);
+    border: none;
+    background-color: transparent;
+    font-size: large;
+    cursor: pointer;
+}
 /* _____________________________________ */

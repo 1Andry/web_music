@@ -19,12 +19,12 @@
                 <div class="text">
                     <h2>{{ album.album_title }}</h2>
 
-                    <button type="button"><a href="{% url 'player:detail' album.id %}" class="" role="button">
+                    <button type="button" class="btn-sound" ><a href="{% url 'player:detail' album.id %}" class="" role="button">
                         <span style="color: #0ced41;">&#x25BA;</span> Play</a></button>
                     <form action="{% url 'player:delete_album' album.id %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="album_id" value="{{ album.id }}"/>
-                        <button type="submit" class=""><span class="">&#x2716;</span> Удалить
+                        <button type="submit" class="btn-sound"><span class="">&#x2716;</span> Удалить
                         </button>
                     </form>
                     <!-- Favorite Album -->

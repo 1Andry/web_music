@@ -110,18 +110,17 @@ def detail(request, album_id):
         return render(request, 'player/detail.html', {'album': album, 'user': user})
 
 
-def favorite(request, song_id):
-    song = get_object_or_404(Song, pk=song_id)
+def favorite(request):
+    song_ids = []
     try:
-        if song.is_favorite:
-            song.is_favorite = False
-        else:
-            song.is_favorite = True
-        song.save()
-    except (KeyError, Song.DoesNotExist):
-        return JsonResponse({'success': False})
-    else:
-        return JsonResponse({'success': True})
+        for album in Album.objects.filter(user=request.user):
+            for song in album.song_set.all():
+                song_ids.append(song.pk)
+        users_songs = Song.objects.filter(pk__in=song_ids)
+        favorite_songs = users_songs.filter(is_favorite=True)
+        return render(request, 'player/favorite.html', {'favorite_songs': favorite_songs})
+    except:
+        return render(request, 'player/favorite.html')
 
 
 def favorite_album(request, album_id):
