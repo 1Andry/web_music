@@ -1,7 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from .forms import AlbumForm, SongForm, UserForm
@@ -110,31 +112,38 @@ def detail(request, album_id):
         return render(request, 'player/detail.html', {'album': album, 'user': user})
 
 
+@login_required
 def favorite(request):
-    song_ids = []
-    try:
-        for album in Album.objects.filter(user=request.user):
-            for song in album.song_set.all():
-                song_ids.append(song.pk)
-        users_songs = Song.objects.filter(pk__in=song_ids)
-        favorite_songs = users_songs.filter(is_favorite=True)
-        return render(request, 'player/favorite.html', {'favorite_songs': favorite_songs})
-    except:
-        return render(request, 'player/favorite.html')
+    favorite_songs = Song.objects.filter(is_favorite=request.user)
+    return render(request, 'player/favorite.html', {'favorite_songs': favorite_songs})
 
 
-def favorite_album(request, album_id):
-    album = get_object_or_404(Album, pk=album_id)
-    try:
-        if album.is_favorite:
-            album.is_favorite = False
-        else:
-            album.is_favorite = True
-        album.save()
-    except (KeyError, Album.DoesNotExist):
-        return JsonResponse({'success': False})
-    else:
-        return JsonResponse({'success': True})
+@login_required
+def favorite_add(request, pk):
+    song = get_object_or_404(Song, pk=request.POST.get('song_id'))
+    song.is_favorite.add(request.user)
+    return redirect('player:songs')
+
+
+@login_required
+def favorite_remove(request, pk):
+    song = get_object_or_404(Song, pk=request.POST.get('song_id'))
+    song.is_favorite.remove(request.user)
+    return redirect('player:favorite')
+
+
+# def favorite_album(request, album_id):
+#     album = get_object_or_404(Album, pk=album_id)
+#     try:
+#         if album.is_favorite:
+#             album.is_favorite = False
+#         else:
+#             album.is_favorite = True
+#         album.save()
+#     except (KeyError, Album.DoesNotExist):
+#         return JsonResponse({'success': False})
+#     else:
+#         return JsonResponse({'success': True})
 
 
 def index(request):
@@ -206,7 +215,7 @@ def register(request):
     return render(request, 'player/register.html', context)
 
 
-def songs(request, filter_by):
+def songs(request,):
     if not request.user.is_authenticated:
         return render(request, 'player/login.html')
     else:
@@ -216,11 +225,14 @@ def songs(request, filter_by):
                 for song in album.song_set.all():
                     song_ids.append(song.pk)
             users_songs = Song.objects.filter(pk__in=song_ids)
-            if filter_by == 'favorites':
-                users_songs = users_songs.filter(is_favorite=True)
+            # if filter_by == 'favorites':
+            #     users_songs = users_songs.filter(is_favorite=True)
+            # for s in Song.objects.filter(is_favorite=True):
+            #     print(s.audio_file)
+
         except Album.DoesNotExist:
             users_songs = []
         return render(request, 'player/songs.html', {
             'song_list': users_songs,
-            'filter_by': filter_by,
+            # 'filter_by': filter_by,
         })

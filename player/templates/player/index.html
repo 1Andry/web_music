@@ -18,7 +18,6 @@
                 </a>
                 <div class="text">
                     <h2>{{ album.album_title }}</h2>
-
                     <button type="button" class="btn-sound" ><a href="{% url 'player:detail' album.id %}" class="" role="button">
                         <span style="color: #0ced41;">&#x25BA;</span> Play</a></button>
                     <form action="{% url 'player:delete_album' album.id %}" method="post">
@@ -27,11 +26,7 @@
                         <button type="submit" class="btn-sound"><span class="">&#x2716;</span> Удалить
                         </button>
                     </form>
-                    <!-- Favorite Album -->
-                    <a href="{% url 'player:favorite_album' album.id %}" class="btn btn-default btn-sm btn-favorite"
-                       role="button">
-                        <span class="glyphicon glyphicon-star {% if album.is_favorite %}active{% endif %}"></span>
-                    </a>
+
                 </div>
             </div>
         </div>

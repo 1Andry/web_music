@@ -35,7 +35,7 @@
                             <th>Название</th>
                             <th></th>
                             <th></th>
-                            <th>Избранное</th>
+                            <th>В избранное</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -59,6 +59,7 @@
                                 </form>
                             </td>
                             <td>
+                                {% include 'player/add_to_fav.html' %}
                             </td>
                         </tr>
                         {% endfor %}

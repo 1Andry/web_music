@@ -3,17 +3,16 @@
 <div class="body">
     <div class="body-wrapper">
         <div class="songs">
-            <button><a href="{% url 'player:songs' 'all' %}">Вся музыка</a></button>
+            <button><a href="{% url 'player:songs'  %}">Вся музыка</a></button>
             <button><a href="{% url 'player:favorite'  %}">Избранное</a></button>
         </div>
-
         <table class="">
             <thead>
             <tr>
                 <th>Название</th>
                 <th></th>
                 <th>Альбом</th>
-                <th>Favorite</th>
+                <th>В избранное</th>
                 <th>Скачать</th>
             </tr>
             </thead>
@@ -37,7 +36,7 @@
                     <a href="{% url 'player:detail' song.album.id %}">{{ song.album.album_title }}</a>
                 </td>
                 <td>
-
+                    {% include 'player/add_to_fav.html' %}
                 </td>
                 <td>
                     <div class="">

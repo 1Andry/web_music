@@ -16,7 +16,7 @@
                     <div class="{% block albums_active %}{% endblock %}"><a href="{% url 'player:index' %}">Альбомы</a>
                     </div>
                     <div class="{% block songs_active %}{% endblock %}"><a
-                            href="{% url 'player:songs' 'all' %}"><span class="simvol">🎷</span>Музыка</a>
+                            href="{% url 'player:songs' %}"><span class="simvol">🎷</span>Музыка</a>
                     </div>
                     <div class="navbar-2">
                         <form class="search-form" role="search" method="get" action="{% url 'player:index' %}">

@@ -21,6 +21,14 @@ class SongForm(forms.ModelForm):
         fields = ['audio_file']
 
 
+# class AddToFavorite(forms.ModelForm):
+#     is_favorite = forms.ManyToManyField(User, related_name="fav_s", blank=True)
+#
+#     class Meta:
+#         model = Song
+#         fields = ['audio_file']
+
+
 class UserForm(forms.ModelForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
