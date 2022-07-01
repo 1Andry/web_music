@@ -36,7 +36,9 @@
                     <a href="{% url 'player:detail' song.album.id %}">{{ song.album.album_title }}</a>
                 </td>
                 <td>
+
                     {% include 'player/add_to_fav.html' %}
+
                 </td>
                 <td>
                     <div class="">

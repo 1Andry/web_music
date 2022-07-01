@@ -13,14 +13,9 @@ class Album(models.Model):
 
 
 class Song(models.Model):
-    # class NewManager(models.Manager):
-    #     def get_queryset(self):
-    #         return super().get_queryset().filter(status='published')
-
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
-    audio_file = models.FileField(default='', unique=True)
+    audio_file = models.FileField(default='')
     is_favorite = models.ManyToManyField(User, related_name="fav_song", blank=True)
-    # newmanager = NewManager()
 
     def __str__(self):
         return str(self.audio_file)
