@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
     <title>My music</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
@@ -19,8 +20,8 @@
                             href="{% url 'player:songs' %}"><span class="simvol">🎷</span>Музыка</a>
                     </div>
                     <div class="navbar-2">
-                        <form class="search-form" role="search" method="get" action="{% url 'player:index' %}">
-                            <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+                        <form class="search-form" role="search" method="get" action="{% url 'player:search' %}">
+                            <input type="search" class="form-control" name="q" value="{{ request.GET.q }}">
                             <button type="submit" class="btn-s">🔍</button>
                         </form>
                     </div>
@@ -38,4 +39,4 @@
 {% block body %}
 {% endblock %}
 </body>
-</html>
+ </html>

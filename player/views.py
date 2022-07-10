@@ -42,24 +42,36 @@ def create_album(request):
 
 
 def create_song(request, album_id):
-    form = SongForm(request.POST or None, request.FILES or None)
     album = get_object_or_404(Album, pk=album_id)
-    if form.is_valid():
-        song = form.save(commit=False)
-        song.album = album
-        song.audio_file = request.FILES['audio_file']
-        file_type = song.audio_file.url.split('.')[-1]
-        file_type = file_type.lower()
-        if file_type not in AUDIO_FILE_TYPES:
-            context = {
-                'album': album,
-                'form': form,
-                'error_message': 'Audio file must be WAV, MP3, or OGG',
-            }
-            return render(request, 'player/create_song.html', context)
-
-        song.save()
-        return render(request, 'player/detail.html', {'album': album})
+    if request.method == 'POST':
+        form = SongForm(request.POST or None, request.FILES or None)
+        if form.is_valid():
+            for f in request.FILES.getlist('audio_file'):
+                albums_songs = album.song_set.all()
+                for s in albums_songs:
+                    if s.audio_file == form.cleaned_data.get("audio_file"):
+                        context = {
+                            'album': album,
+                            'form': form,
+                            'error_message': 'Такая песня уже есть',
+                        }
+                        return render(request, 'player/create_song.html', context)
+                song = Song()
+                song.album = album
+                song.audio_file = f
+                file_type = song.audio_file.url.split('.')[-1]
+                file_type = file_type.lower()
+                if file_type not in AUDIO_FILE_TYPES:
+                    context = {
+                        'album': album,
+                        'form': form,
+                        'error_message': 'Audio file must be WAV, MP3',
+                    }
+                    return render(request, 'player/create_song.html', context)
+                song.save()
+            return redirect('player:index')
+    else:
+        form = SongForm()
     context = {
         'album': album,
         'form': form,
@@ -87,7 +99,13 @@ def detail(request, album_id):
     else:
         user = request.user
         album = get_object_or_404(Album, pk=album_id)
-        return render(request, 'player/detail.html', {'album': album, 'user': user})
+        favorite_songs = Song.objects.filter(is_favorite=request.user)
+        context = {
+            'album': album,
+            'user': user,
+            'favorite_songs': favorite_songs
+        }
+        return render(request, 'player/detail.html', context)
 
 
 @login_required
@@ -100,14 +118,14 @@ def favorite(request):
 def favorite_add(request, pk):
     song = get_object_or_404(Song, pk=request.POST.get('song_id'))
     song.is_favorite.add(request.user)
-    return redirect('player:songs')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
 def favorite_remove(request, pk):
     song = get_object_or_404(Song, pk=request.POST.get('song_id'))
     song.is_favorite.remove(request.user)
-    return redirect('player:favorite')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 def index(request):
@@ -115,22 +133,22 @@ def index(request):
         return render(request, 'player/login.html')
     else:
         albums = Album.objects.filter(user=request.user)
-        song_results = Song.objects.all()
-        query = request.GET.get("q")
-        if query:
-            albums = albums.filter(
-                Q(album_title__icontains=query) |
-                Q(artist__icontains=query)
-            ).distinct()
-            song_results = song_results.filter(
-                Q(song_title__icontains=query)
-            ).distinct()
-            return render(request, 'player/index.html', {
-                'albums': albums,
-                'songs': song_results,
-            })
-        else:
-            return render(request, 'player/index.html', {'albums': albums})
+        return render(request, 'player/index.html', {'albums': albums})
+
+
+@login_required
+def search(request):
+    albums = Album.objects.filter(user=request.user)
+    song_results = Song.objects.all()
+    query = request.GET.get('q')
+    if query:
+        song_results = song_results.filter(audio_file__icontains=query)
+        return render(request, 'player/search.html', {
+            'albums': albums,
+            'songs': song_results,
+        })
+    else:
+        return render(request, 'player/search.html')
 
 
 def logout_user(request):
@@ -180,8 +198,6 @@ def register(request):
 
 
 def songs(request, ):
-    favorite_songs = Song.objects.filter(is_favorite=request.user)
-    print(favorite_songs)
     if not request.user.is_authenticated:
         return render(request, 'player/login.html')
     else:
@@ -191,7 +207,14 @@ def songs(request, ):
                 for song in album.song_set.all():
                     song_ids.append(song.pk)
             users_songs = Song.objects.filter(pk__in=song_ids)
-        except Album.DoesNotExist:
+            favorite_songs = Song.objects.filter(is_favorite=request.user)
+            context = {
+                'song_list': users_songs,
+                'favorite_songs': favorite_songs,
+            }
+            return render(request, 'player/songs.html', context)
+
+        except:
             users_songs = []
         return render(request, 'player/songs.html', {
             'song_list': users_songs,

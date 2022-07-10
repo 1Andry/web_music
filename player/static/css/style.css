@@ -1,10 +1,99 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
+@media only screen and (max-width: 700px){
+    .nav{
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between; 
+        flex-wrap: wrap;
+    }
+    .nav-container-left{
+        margin: 0 auto;
+    }
+    .nav-container-right{
+        margin: 0 auto;
+    }
+    table.table thead {
+        display: none;
+      }
+      table.delivery tr {
+        display: block;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e8e9eb;
+      }
+      table.delivery td {
+        display: block;
+        text-align: right;
+      }
+      table.delivery td:before {
+        content: attr(aria-label);
+        float: left;
+        font-weight: bold;
+      }
+}
+@media only screen and (max-width: 550px){
+    body{
+        font-size: 30px;
+
+    }
+    button{
+        font-size: 30px;
+    }
+    .wrap-header{
+        
+    }
+    tbody{
+        font-size: 30px;
+    }
+    .wrap-header{
+        font-size: 30px;
+    }
+    .navbar-2{
+    }
+    .nav{
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between; 
+        flex-wrap: wrap;
+        background-color: #000;
+        font-size: 30px;
+    }
+    .nav-container-left{
+        margin: 0 auto;
+    }
+    .nav-container-right{
+        margin: 0 auto;
+    }
+    table.table thead {
+        display: none;
+      }
+      .is_fav{
+        all:initial;
+      }
+      table.table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #e8e9eb;
+      }
+      table.table td {
+        display: flex;
+        /* text-align: right; */
+      }
+      table.table td:before {
+        content: attr(aria-label);
+        float: left;
+        font-weight: bold;
+      }
+}
+
+
+
 body{
     padding: 0;
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
+
 }
 .btn-visitor{
     color: #ffffff;
@@ -18,14 +107,15 @@ body{
 }
 .reg-wrap{
     background-color: #010101;
-
 }
-.footer{
-    margin: 0 auto;
+.foo{
     max-width: 700px;
-    background-color: #dfdbdb;
+    border: solid black;
+    border-radius: 4px;
+    background-color: #ffffff;
     position: sticky;
     bottom: 0;
+    margin: 10px 8px 8px 0px;
 }
 .header{
     background-color: #ffffff;
@@ -87,33 +177,40 @@ body{
     align-items: center;
 
 }
+/* .table{
+    max-width: 700px;
+} */
+
+td {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .body{
     margin: 0 auto;
-
-    width: 1300px;
+    max-width: 1200px;
     box-sizing: border-box;
-    width: 100%;
+
 }
 .body-wrap{
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
-    width: 1200px;
-    max-width: 100%;
+    max-width: 1200px;
+
 }
 .body-wrapper{
     margin: 0 auto;
-
     flex-wrap: wrap;
     box-sizing: border-box;
-    width: 1200px;
-    max-width: 100%;
+
 }
 .user-tit{
     margin: 0 auto;
     padding-left: 30px;
-    width: 1200px;
+    max-width: 1200px;
 }
 .album-wrap{
     display: flex;
@@ -126,7 +223,6 @@ body{
 .album{
     max-width: 360px;
     box-sizing: border-box;
-
 }
 .album img{
     max-width: 250px;
@@ -150,9 +246,13 @@ body{
     box-sizing: border-box;
     padding: 10px 8px 8px 0px ;
 }
+
 .favorite{
     display: flex;
     align-items: center;
+}
+.is_fav form{
+    text-align: center;
 }
 .songs button{
     padding: 8px;
@@ -175,17 +275,11 @@ body{
     padding: 10px;
     color: #ffffff;
 }
-.checkbox{
-    width: 20px;
-    margin: 0 auto;
-    margin-right: 0px;
-}
+
 .play-list{
     display: flex;
     justify-content: space-between;
-
 }
-
 .mainmenu{
     margin: 0 auto;
     max-width: 700px;
@@ -217,8 +311,9 @@ a{
     max-width: 300px;
     margin: 0 auto;
 }
-.footer-wrapper{
+.foo-wrapper{
     width: 100%;
+
 }
 .player-container{
     padding: 8px;
@@ -233,7 +328,6 @@ a{
     display: flex;
     justify-content: center;
     background-color: #ffffff;
-
 }
 .simvol{
     height: 10px;
@@ -256,21 +350,11 @@ a{
     margin-bottom: 5px;
     border-radius: 4px;
     cursor: pointer; 
-    
 }
 .progress{
     background-color:#2b3c58;
     height: 6px;
-    /* width: 150px; */
 }
-
-/* input{ */
-    /* border: none; */
-    /* color: black;
-    background-color: white;
-    margin-bottom: 20px; */
-
-/* } */
 .register{
     border: 4px solid white;
     padding: 20px;
@@ -317,7 +401,6 @@ input{
     padding: 10px;
     box-sizing: border-box;
 }
-
 .btn-sound {
     border: none;
     border-radius: 4px;
@@ -328,6 +411,14 @@ input{
 .btn-sound a{
     color: #ffffff;
 }
+.btn-sound-add{
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: green;
+    cursor: pointer;
+}
 .download{
     color: #337ab7;
     transform: rotate(-90deg);
@@ -336,4 +427,4 @@ input{
     font-size: large;
     cursor: pointer;
 }
-/* _____________________________________ */
+

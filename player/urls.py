@@ -18,5 +18,5 @@ urlpatterns = [
     path('<int:album_id>/create_song/', create_song, name='create_song'),
     path('<int:album_id>/delete_song/<int:song_id>/', delete_song, name='delete_song'),
     path('<int:album_id>/delete_album/', delete_album, name='delete_album'),
-
+    path('search/', search, name='search'),
 ]

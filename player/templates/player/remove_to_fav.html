@@ -1,0 +1,6 @@
+<form action="{% url 'player:favorite_remove' song.pk %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn-sound" name="song_id" style="background-color: red" value="{{ song.id }}">
+        <span>&#x2716;</span>
+    </button>
+</form>

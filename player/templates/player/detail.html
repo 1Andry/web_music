@@ -35,15 +35,17 @@
                             <th>Название</th>
                             <th></th>
                             <th></th>
-                            <th>В избранное</th>
+                            <th>Избранное</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for song in album.song_set.all %}
                         <tr>
-                            <td>{{ song.audio_file }}</td>
+                            <td class="td_song">{{ song.audio_file }}
+                                <div class="sound" hidden> {{ song.audio_file.url }}</div>
+                            </td>
                             <td>
-                                <a class="sound" href="{{ song.audio_file.url }}">
+                                <a class="" href="{{ song.audio_file.url }}">
                                     <button type="button" class="btn-sound">
                                         <span style="color: #0ced41;">&#x25BA;</span>&nbsp; Play
                                     </button>
@@ -58,8 +60,12 @@
                                     </button>
                                 </form>
                             </td>
-                            <td>
+                            <td class="is_fav">
+                                {% if song in favorite_songs %}
+                                {% include 'player/remove_to_fav.html'%}
+                                {% else %}
                                 {% include 'player/add_to_fav.html' %}
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -67,6 +73,8 @@
                     </table>
                 </div>
             </div>
+            {% include 'player/player.html'%}
+
         </div>
     </div>
 </div>

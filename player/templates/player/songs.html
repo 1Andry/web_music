@@ -6,27 +6,28 @@
             <button><a href="{% url 'player:songs'  %}">Вся музыка</a></button>
             <button><a href="{% url 'player:favorite'  %}">Избранное</a></button>
         </div>
-        <table class="">
+        <table class="table">
             <thead>
             <tr>
                 <th>Название</th>
                 <th></th>
                 <th>Альбом</th>
-                <th>В избранное</th>
+                <th>Избранное</th>
                 <th>Скачать</th>
             </tr>
             </thead>
             <tbody>
             {% for song in song_list %}
             <tr>
-                <td>{{ song.audio_file }}</td>
+                <td class="td_song">{{ song.audio_file }}
+                    <div class="sound" hidden> {{ song.audio_file.url }}</div>
+                </td>
                 <td>
-                    <div class="sound">
-                        <a href="{{ song.audio_file.url }}">
-                            <button type="button" class="btn-sound"><span style="color: #0ced41;">&#x25BA;</span> Play
-                            </button>
-                        </a>
-                    </div>
+                    <a class="" href="{{ song.audio_file.url }}">
+                        <button type="button" class="btn-sound">
+                            <span style="color: #0ced41;">&#x25BA;</span>&nbsp; Play
+                        </button>
+                    </a>
                 </td>
                 <td>
                     <a href="{% url 'player:detail' song.album.id %}">
@@ -35,13 +36,15 @@
                     </a>
                     <a href="{% url 'player:detail' song.album.id %}">{{ song.album.album_title }}</a>
                 </td>
-                <td>
-
+                <td class="is_fav">
+                    {% if song in favorite_songs %}
+                    {% include 'player/remove_to_fav.html'%}
+                    {% else %}
                     {% include 'player/add_to_fav.html' %}
-
+                    {% endif %}
                 </td>
-                <td>
-                    <div class="">
+                <td class="is_fav">
+                    <div>
                         <a download="" href="{{ song.audio_file.url }}">
                             <button type="button" class="download"><span>&#8676;</span></button>
                         </a>
@@ -51,7 +54,7 @@
             {% endfor %}
             </tbody>
         </table>
+        {% include 'player/player.html'%}
     </div>
 </div>
-<!--{% include 'player/player.html'%}-->
 {% endblock %}

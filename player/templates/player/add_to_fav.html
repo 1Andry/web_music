@@ -1,5 +1,6 @@
 <form action="{% url 'player:favorite_add' song.pk %}" method="POST">
     {% csrf_token %}
-    <button type="submit" class="btn-sound" name="song_id" value="{{ song.id }}">+
+    <button type="submit" class="btn-sound-add" name="song_id" value="{{ song.id }}">
+        <span>+</span>
     </button>
 </form>
